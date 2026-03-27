@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ensure content is visible even if utility classes fail to apply */
+#root {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  color: #e7edf6;
+}
+
+:root {
+  --surface: #0b1421;
+  --surface-dim: #08101a;
+  --surface-low: #0f1b2b;
+  --surface-container: #132133;
+  --surface-high: #18283c;
+  --outline-ghost: rgba(154, 169, 190, 0.15);
+  --gold: #f2ca50;
+  --gold-deep: #d4af37;
+  --teal: #00c4b4;
+  --teal-soft: rgba(0, 196, 180, 0.18);
+  --text-main: #eef3f9;
+  --text-muted: #b8c8dc;
+  --text-dim: #9fb1c5;
+  --violet: #c4b5fd;
+  --violet-soft: rgba(196, 181, 253, 0.14);
+  --shadow-deep: 0 36px 72px rgba(5, 13, 26, 0.32);
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-data: 'Inter', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen antialiased;
+    font-family: var(--font-body);
+    color: var(--text-main);
+    background-color: var(--surface);
+    background-image:
+      radial-gradient(circle at 12% 12%, rgba(0, 196, 180, 0.12), transparent 22%),
+      radial-gradient(circle at 85% 8%, rgba(242, 202, 80, 0.14), transparent 24%),
+      linear-gradient(180deg, #0b1421 0%, #0a1320 40%, #08101a 100%);
+    background-attachment: fixed;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, transparent 0, rgba(255,255,255,0.012) 50%, transparent 100%),
+      linear-gradient(180deg, rgba(255,255,255,0.01), transparent 16%);
+    mix-blend-mode: screen;
+    opacity: 0.55;
+  }
+
+  ::selection {
+    background: rgba(0, 196, 180, 0.28);
+    color: white;
+  }
+
+  .font-display {
+    font-family: var(--font-display) !important;
+  }
+
+  .font-mono,
+  .tabular-nums {
+    font-family: var(--font-data) !important;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.glass-panel {
+  border-radius: 12px;
+  border: 0.5px solid var(--outline-ghost);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02)),
+    var(--surface-low);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-deep);
+}
+
+.glass-panel-hover {
+  border-radius: 12px;
+  border: 0.5px solid var(--outline-ghost);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+    var(--surface-low);
+  backdrop-filter: blur(20px);
+  transition: transform 0.24s ease, background-color 0.24s ease, box-shadow 0.24s ease;
+  box-shadow: var(--shadow-deep);
+}
+
+.glass-panel-hover:hover {
+  transform: translateY(-2px);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.028)),
+    var(--surface-container);
+  box-shadow:
+    0 42px 70px rgba(5, 13, 26, 0.36),
+    0 0 40px rgba(242, 202, 80, 0.05);
+}
+
+/* Hide number input spinners (Chrome, Safari, Firefox) */
+.input-no-spin::-webkit-outer-spin-button,
+.input-no-spin::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.input-no-spin {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.select-modern {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: rgba(255, 255, 255, 0.02);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.65rem center;
+  background-size: 1.15rem;
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+.select-modern:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%2322d3ee' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+select.select-modern option {
+  background-color: #0c1222;
+  color: #e2e8f0;
+  padding: 0.5rem;
+}
+
+@layer components {
+  .input-modern {
+    @apply w-full px-0 py-3 text-sm shadow-none transition-all duration-200 placeholder:text-slate-500 focus:outline-none;
+    border: 0;
+    border-bottom: 1px solid var(--outline-ghost);
+    border-radius: 0;
+    background: transparent;
+    color: var(--text-main);
+    font-family: var(--font-data);
+  }
+
+  /* Keep focus styling limited to the bottom border only.
+     Remove default outline and transient full-element focus rings that appear on click.
+     Preserve keyboard accessibility via :focus-visible if needed. */
+  .input-modern:focus,
+  .input-modern:active {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    border-bottom-color: var(--teal);
+    /* inset bottom shadow to emphasize the underline without adding a full box shadow */
+    box-shadow: inset 0 -1px 0 var(--teal);
+  }
+
+  /* Respect focus-visible for keyboard users (keeps the same bottom-only emphasis). */
+  .input-modern:focus-visible {
+    outline: none;
+    border-bottom-color: var(--teal);
+    box-shadow: inset 0 -1px 0 var(--teal);
+  }
+
+  /* Firefox inner focus removal for some input types */
+  .input-modern::-moz-focus-inner {
+    border: 0;
+  }
+
+  .label-modern {
+    @apply mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.18em];
+    color: var(--text-dim);
+    font-family: var(--font-data);
+  }
+
+  .section-title {
+    @apply font-display text-3xl font-semibold tracking-tight text-white sm:text-5xl;
+    letter-spacing: -0.02em;
+  }
+
+  .section-sub {
+    @apply mt-3 max-w-2xl text-sm leading-6;
+    color: var(--text-muted);
+  }
+
+  .btn-pill {
+    @apply inline-flex items-center justify-center px-4 py-2 text-xs font-semibold transition-all duration-200 active:scale-[0.98];
+    border-radius: 6px;
+    font-family: var(--font-data);
+  }
+
+  .gradient-text {
+    @apply font-extrabold;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: var(--gold);
+    -webkit-text-fill-color: transparent;
+  }
+  @supports not (background-clip: text) {
+    .gradient-text {
+      -webkit-text-fill-color: var(--gold);
+      background: none;
+    }
+  }
+
+  .editorial-eyebrow {
+    font-family: var(--font-data);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-dim);
+  }
+
+  /* Highlighted badge used for the "Advanced Strategy" section header */
+  .advanced-strategy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-data);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--violet);
+    background: var(--violet-soft);
+    border: 1px solid rgba(196, 181, 253, 0.28);
+    border-radius: 6px;
+    padding: 4px 10px;
+  }
+  .advanced-strategy-badge::before {
+    content: '✦';
+    font-size: 9px;
+    opacity: 0.85;
+  }
+
+  .metric-surface {
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+
+  .intelligence-pulse {
+    display: inline-flex;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--teal);
+    box-shadow: 0 0 10px #00c4b4;
+  }
+}
+
+/* Subtle motion only — avoid opacity:0 which can stick if animations are reduced */
+.stagger-children > * {
+  animation: staggerFadeInUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stagger-children > * {
+    animation: none;
+  }
+}
+.stagger-children > *:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.stagger-children > *:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.stagger-children > *:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.stagger-children > *:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.stagger-children > *:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+@keyframes staggerFadeInUp {
+  from {
+    opacity: 0.96;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
