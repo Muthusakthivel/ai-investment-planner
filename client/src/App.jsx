@@ -142,14 +142,13 @@ export default function App() {
   const snapshotKeys = hasLumpsum ? BUCKET_KEYS : BUCKET_KEYS.filter((k) => k !== 'Bonds');
 
   return (
-    <div className="min-h-screen pb-32 text-[#eef3f9]">
+    <div className="min-h-screen flex flex-col text-[#eef3f9]">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-[rgba(11,20,33,0.72)] backdrop-blur-[20px]">
+      <header className="relative z-30 bg-[rgba(11,20,33,0.72)] backdrop-blur-[20px]">
         <div className="mx-auto flex max-w-[88rem] flex-wrap items-center justify-between gap-6 px-5 py-5 md:px-10 xl:px-16">
           <div className="flex items-center gap-4">
             <LogoMark />
             <div>
-              <p className="editorial-eyebrow mb-1">The Sovereign Terminal</p>
               <h1 className="font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                 <span className="gradient-text">AI</span>{' '}
                 <span className="text-white">Investment Planner</span>
@@ -320,8 +319,8 @@ export default function App() {
                       type="button"
                       onClick={() => setRiskAppetite(r)}
                       className={`rounded-[6px] py-2.5 text-xs font-bold transition-all duration-200 ${riskAppetite === r
-                          ? 'bg-[linear-gradient(135deg,#f2ca50,#d4af37)] text-[#08101a] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]'
-                          : 'bg-[rgba(255,255,255,0.02)] text-[#b8c8dc] hover:bg-[rgba(255,255,255,0.05)] hover:text-[#eef3f9]'
+                        ? 'bg-[linear-gradient(135deg,#f2ca50,#d4af37)] text-[#08101a] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]'
+                        : 'bg-[rgba(255,255,255,0.02)] text-[#b8c8dc] hover:bg-[rgba(255,255,255,0.05)] hover:text-[#eef3f9]'
                         }`}
                     >
                       {r}
@@ -594,7 +593,7 @@ export default function App() {
 
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 z-20 bg-[rgba(11,20,33,0.84)] py-4 backdrop-blur-[20px]">
+      <footer className="mt-auto bg-[rgba(11,20,33,0.84)] py-8 backdrop-blur-[20px] border-t border-white/5">
         <p className="mx-auto max-w-4xl px-4 text-center text-[11px] leading-relaxed text-[#9fb1c5] sm:text-xs">
           <span className="font-semibold text-[#f2ca50]">Disclaimer:</span> This is an AI-powered
           educational tool and not financial advice. Consult a SEBI-registered advisor before
