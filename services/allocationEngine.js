@@ -568,9 +568,9 @@ function computeWealthCreationAllocation(input, profile) {
 
   const ageN = Number(input.age) || 30;
   const goldMax =
-    ageN < 30    ? (cfg.goldMaxByAge?.under30 ?? 5)
-    : ageN <= 45 ? (cfg.goldMaxByAge?.between30_45 ?? 10)
-                 : (cfg.goldMaxByAge?.over45 ?? 15);
+    ageN < 30 ? (cfg.goldMaxByAge?.under30 ?? 5)
+      : ageN <= 45 ? (cfg.goldMaxByAge?.between30_45 ?? 10)
+        : (cfg.goldMaxByAge?.over45 ?? 15);
   gold = Math.min(gold, goldMax);
   debt = Math.max(cfg.minDebtPercent ?? 5, debt);
 
@@ -578,8 +578,8 @@ function computeWealthCreationAllocation(input, profile) {
   if (Math.abs(rawTotal - 100) > 0.1) {
     const scale = 100 / rawTotal;
     totalEqMf = Math.round(totalEqMf * scale * 100) / 100;
-    debt      = Math.round(debt      * scale * 100) / 100;
-    gold      = Math.round((100 - totalEqMf - debt) * 100) / 100;
+    debt = Math.round(debt * scale * 100) / 100;
+    gold = Math.round((100 - totalEqMf - debt) * 100) / 100;
   }
 
   const split =
@@ -594,7 +594,7 @@ function computeWealthCreationAllocation(input, profile) {
     Gold: gold,
   });
   const instrumentBreakdown = instrumentBreakdownFromMonthlyBuckets(monthlyAllocationPercent);
-  const safePct   = Math.round((monthlyAllocationPercent.Debt  + monthlyAllocationPercent.Gold)        * 100) / 100;
+  const safePct = Math.round((monthlyAllocationPercent.Debt + monthlyAllocationPercent.Gold) * 100) / 100;
   const growthPct = Math.round((monthlyAllocationPercent.Equity + monthlyAllocationPercent.MutualFunds) * 100) / 100;
   const lumpsumAlloc = computeLumpsumAllocation(profile, false);
 
@@ -605,9 +605,9 @@ function computeWealthCreationAllocation(input, profile) {
     lumpsumAllocationPercent: lumpsumAlloc.allocationPercent,
     goalType: 'standard',
     priority: 'normal',
-    monthlySafeAllocationPercentage:   safePct,
+    monthlySafeAllocationPercentage: safePct,
     monthlyGrowthAllocationPercentage: growthPct,
-    lumpsumSafeAllocationPercentage:   lumpsumAlloc.safeAllocationPercentage,
+    lumpsumSafeAllocationPercentage: lumpsumAlloc.safeAllocationPercentage,
     lumpsumGrowthAllocationPercentage: lumpsumAlloc.growthAllocationPercentage,
     instrumentBreakdown,
   };
@@ -993,21 +993,21 @@ function enrichGoalWithProjections(
   const combinedAllocationPercent =
     combinedTotal > 0
       ? normalizeTo100(
-          Object.fromEntries(
-            BUCKETS.map((k) => [k, (combinedRupee[k] / combinedTotal) * 100])
-          )
+        Object.fromEntries(
+          BUCKETS.map((k) => [k, (combinedRupee[k] / combinedTotal) * 100])
         )
+      )
       : normalizeTo100({ Equity: 25, MutualFunds: 25, Debt: 25, Bonds: 25, Gold: 0 });
 
   const totalGrowth =
     Number(monthlyAllocationPercent.Equity || 0) + Number(monthlyAllocationPercent.MutualFunds || 0);
   const equityMutualFundSplit = totalGrowth > 0
     ? {
-        equityOfGrowth: Math.round(((Number(monthlyAllocationPercent.Equity || 0) / totalGrowth) * 100) * 100) / 100,
-        mutualFundsOfGrowth: Math.round(((Number(monthlyAllocationPercent.MutualFunds || 0) / totalGrowth) * 100) * 100) / 100,
-        equityOfPortfolio: Math.round((Number(monthlyAllocationPercent.Equity || 0)) * 100) / 100,
-        mutualFundsOfPortfolio: Math.round((Number(monthlyAllocationPercent.MutualFunds || 0)) * 100) / 100,
-      }
+      equityOfGrowth: Math.round(((Number(monthlyAllocationPercent.Equity || 0) / totalGrowth) * 100) * 100) / 100,
+      mutualFundsOfGrowth: Math.round(((Number(monthlyAllocationPercent.MutualFunds || 0) / totalGrowth) * 100) * 100) / 100,
+      equityOfPortfolio: Math.round((Number(monthlyAllocationPercent.Equity || 0)) * 100) / 100,
+      mutualFundsOfPortfolio: Math.round((Number(monthlyAllocationPercent.MutualFunds || 0)) * 100) / 100,
+    }
     : null;
 
   return {
@@ -1141,8 +1141,8 @@ export function computeAllocation(input) {
     const combinedPercent =
       combinedTotal > 0
         ? normalizeTo100(
-            Object.fromEntries(BUCKETS.map((k) => [k, (combinedRupee[k] / combinedTotal) * 100]))
-          )
+          Object.fromEntries(BUCKETS.map((k) => [k, (combinedRupee[k] / combinedTotal) * 100]))
+        )
         : zerosForBuckets(BUCKETS);
 
     const portfolioMetrics = computePortfolioMetrics([defaultPlan], monthly);
@@ -1282,24 +1282,26 @@ export function computeAllocation(input) {
   const monthlyPercent =
     totalMonthly > 0
       ? normalizeMonthlyTo100(
-          Object.fromEntries(
-            MONTHLY_BUCKETS.map((k) => [k, (monthlyPortfolioRupee[k] / totalMonthly) * 100])
-          )
+        Object.fromEntries(
+          MONTHLY_BUCKETS.map((k) => [k, (monthlyPortfolioRupee[k] / totalMonthly) * 100])
         )
+      )
       : zerosForBuckets(MONTHLY_BUCKETS);
+
   const lumpsumPercent =
     totalLumpsum > 0
       ? normalizeLumpsumTo100(
-          Object.fromEntries(
-            LUMPSUM_BUCKETS.map((k) => [k, (lumpsumPortfolioRupee[k] / totalLumpsum) * 100])
-          )
+        Object.fromEntries(
+          LUMPSUM_BUCKETS.map((k) => [k, (lumpsumPortfolioRupee[k] / totalLumpsum) * 100])
         )
+      )
       : zerosForBuckets(LUMPSUM_BUCKETS);
+
   const combinedPercent =
     totalCombined > 0
       ? normalizeTo100(
-          Object.fromEntries(BUCKETS.map((k) => [k, (combinedPortfolioRupee[k] / totalCombined) * 100]))
-        )
+        Object.fromEntries(BUCKETS.map((k) => [k, (combinedPortfolioRupee[k] / totalCombined) * 100]))
+      )
       : zerosForBuckets(BUCKETS);
 
   const warnings = buildWarnings(input, profile, score, goalResults);

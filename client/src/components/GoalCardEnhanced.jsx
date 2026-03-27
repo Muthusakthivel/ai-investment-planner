@@ -139,245 +139,247 @@ export function GoalCardEnhanced({
         </div>
       </div>
 
-      <div className="flex flex-col gap-0">
-        {/* Full-width chart — primary visual */}
-        <div className="bg-[rgba(255,255,255,0.015)] px-4 py-6 sm:px-8 sm:py-8">
-          <p className="editorial-eyebrow mb-4">
-            SIP growth — conservative · expected · aggressive
-          </p>
-          <div className="min-h-[280px] w-full sm:min-h-[340px] md:min-h-[400px] lg:min-h-[440px]">
-            {hasMonthlySip ? (
-              <SIPProjectionChart
-                projections={g.projections}
-                goalLabel={g.goalName}
-                size="large"
-              />
-            ) : (
-              <div className="flex h-full min-h-[240px] items-center justify-center rounded-[10px] bg-[rgba(255,255,255,0.03)] px-6 text-center text-sm text-[#b8c8dc]">
-                SIP growth curves load here once you set your monthly investment in Basics.
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="grid gap-8 p-5 sm:gap-10 sm:p-8 lg:grid-cols-12 lg:items-start">
-          <div className="lg:col-span-5 xl:col-span-4">
-            <p className="editorial-eyebrow mb-4">
-              Monthly plan (SIP)
+      {(hasMonthlySip || hasLumpsum) && (
+        <div className="flex flex-col gap-0 border-t border-white/5 bg-[rgba(255,255,255,0.01)] transition-all duration-300">
+          {/* Full-width chart — primary visual */}
+          <div className="bg-[rgba(255,255,255,0.015)] px-4 py-6 sm:px-8 sm:py-10">
+            <p className="editorial-eyebrow mb-5">
+              SIP growth — conservative · expected · aggressive
             </p>
-            <GoalPieChart
-              allocationPercent={g.monthlyAllocationPercent || {}}
-              goalLabel={(g.goalName || 'Goal').slice(0, 22)}
-              keys={monthlyKeys}
-            />
-          </div>
-          <div className="lg:col-span-7 xl:col-span-8">
-            <p className="editorial-eyebrow mb-4">
-              Monthly SIP breakdown
-            </p>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {monthlyKeys.map((k) => (
-                <div
-                  key={k}
-                  className="metric-surface flex items-center justify-between rounded-[10px] px-4 py-3"
-                >
-                  <span className="text-sm text-[#cdd7e6]">{BUCKET_LABELS[k]}</span>
-                  <span className="text-right">
-                    <span className="font-display text-base font-semibold text-white">
-                      {Number(g.monthlyAllocationPercent?.[k] || 0).toFixed(1)}%
-                    </span>
-                    <span className="ml-2 text-sm text-[#7fddd4]">
-                      {hasMonthlySip ? `₹${(g.monthlyRupeeAllocation?.[k] || 0).toLocaleString('en-IN')}` : '—'}
-                    </span>
-                  </span>
+            <div className="min-h-[300px] w-full sm:min-h-[360px] md:min-h-[420px] lg:min-h-[460px]">
+              {hasMonthlySip ? (
+                <SIPProjectionChart
+                  projections={g.projections}
+                  goalLabel={g.goalName}
+                  size="large"
+                />
+              ) : (
+                <div className="flex h-full min-h-[260px] items-center justify-center rounded-[12px] bg-[rgba(255,255,255,0.035)] px-6 text-center text-sm text-[#b8c8dc]">
+                  SIP growth curves load here once you set your monthly investment in Basics.
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="mx-5 mb-6 rounded-[12px] bg-[linear-gradient(180deg,rgba(242,202,80,0.08),rgba(255,255,255,0.015))] p-5 sm:mx-8">
-          <p className="editorial-eyebrow mb-4 text-[#f2ca50]/75">
-            One-time investment plan (Lumpsum)
-          </p>
-          {hasLumpsum ? (
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {BUCKET_KEYS.map((k) => (
-                <div
-                  key={`lumpsum-${k}`}
-                  className="metric-surface flex items-center justify-between rounded-[10px] px-4 py-3"
-                >
-                  <span className="text-sm text-[#cdd7e6]">{BUCKET_LABELS[k]}</span>
-                  <span className="text-right">
-                    <span className="font-display text-base font-semibold text-white">
-                      {Number(g.lumpsumAllocationPercent?.[k] || 0).toFixed(1)}%
-                    </span>
-                    <span className="ml-2 text-sm text-[#f2ca50]">
-                      ₹{(g.lumpsumRupeeAllocation?.[k] || 0).toLocaleString('en-IN')}
-                    </span>
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="rounded-[8px] bg-[rgba(255,255,255,0.03)] px-4 py-3 text-sm text-[#b8c8dc]">
-              Add a lumpsum amount in Basics to unlock the one-time plan with bonds for stability.
-            </p>
-          )}
-        </div>
-
-        {(g.monthlySafeAllocationPercentage != null || g.monthlyGrowthAllocationPercentage != null) && (
-          <div className="mx-5 mb-6 flex flex-wrap gap-6 rounded-[12px] bg-[linear-gradient(180deg,rgba(0,196,180,0.08),rgba(255,255,255,0.015))] px-5 py-4 sm:mx-8">
-            <div className="flex items-center gap-3">
-              <span className="editorial-eyebrow">
-                SIP safe allocation
-              </span>
-              <span className="font-display text-xl font-semibold text-[#c8faf5]">
-                {Number(g.monthlySafeAllocationPercentage ?? 0).toFixed(0)}%
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="editorial-eyebrow">
-                SIP growth allocation
-              </span>
-              <span className="font-display text-xl font-semibold text-[#7fddd4]">
-                {Number(g.monthlyGrowthAllocationPercentage ?? 0).toFixed(0)}%
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="editorial-eyebrow">
-                Lumpsum safe allocation
-              </span>
-              <span className="font-display text-xl font-semibold text-[#f2ca50]">
-                {Number(g.lumpsumSafeAllocationPercentage ?? 0).toFixed(0)}%
-              </span>
-            </div>
-          </div>
-        )}
-
-        {g.instrumentAmountBreakdown && (
-          <div className="mx-5 mb-6 rounded-[12px] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5 sm:mx-8">
-            <div className="mb-4 flex items-center justify-between">
-              <p className="editorial-eyebrow">
-                Recommended instruments
-              </p>
-              {(g.equityBreakdown || g.mutualFundBreakdown) && (
-                <button
-                  type="button"
-                  onClick={() => setAdvanced((s) => !s)}
-                  className="btn-pill border border-white/10 px-3 py-1 text-xs font-semibold text-[#d7e0eb] bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)]"
-                >
-                  {advanced ? 'Hide strategy' : 'Show strategy'}
-                </button>
               )}
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {['rd', 'debt', 'equity', 'mutualFunds'].map((k) => {
-                const amt = g.instrumentAmountBreakdown[k];
-                if (amt == null && g.instrumentBreakdown?.[k] == null) return null;
-                const val = Number(amt ?? 0);
-                const pct = g.instrumentBreakdown?.[k];
-                return (
+          <div className="grid gap-8 p-6 sm:gap-12 sm:p-10 lg:grid-cols-12 lg:items-start">
+            <div className="lg:col-span-5 xl:col-span-4">
+              <p className="editorial-eyebrow mb-5">
+                Monthly plan (SIP)
+              </p>
+              <GoalPieChart
+                allocationPercent={g.monthlyAllocationPercent || {}}
+                goalLabel={(g.goalName || 'Goal').slice(0, 22)}
+                keys={monthlyKeys}
+              />
+            </div>
+            <div className="lg:col-span-7 xl:col-span-8">
+              <p className="editorial-eyebrow mb-5">
+                Monthly SIP breakdown
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {monthlyKeys.map((k) => (
                   <div
                     key={k}
-                    className="metric-surface flex items-center justify-between rounded-[10px] px-4 py-3"
+                    className="metric-surface flex items-center justify-between rounded-[12px] px-5 py-4"
                   >
-                    <span className="text-sm text-[#cdd7e6]">{INSTRUMENT_LABELS[k]}</span>
+                    <span className="text-sm font-medium text-[#cdd7e6]">{BUCKET_LABELS[k]}</span>
                     <span className="text-right">
-                      {pct != null && (
-                        <span className="mr-2 text-xs text-[#a8bace]">
-                          {Number(pct).toFixed(0)}%
-                        </span>
-                      )}
-                      <span className="font-display font-semibold text-white">
-                        {hasMonthlySip ? `₹${(val || 0).toLocaleString('en-IN')}` : '—'}
+                      <span className="font-display text-lg font-semibold text-white">
+                        {Number(g.monthlyAllocationPercent?.[k] || 0).toFixed(1)}%
+                      </span>
+                      <span className="ml-3 text-sm font-medium text-[#7fddd4]">
+                        {hasMonthlySip ? `₹${(g.monthlyRupeeAllocation?.[k] || 0).toLocaleString('en-IN')}` : '—'}
                       </span>
                     </span>
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
+          </div>
 
-            {advanced && g.equityBreakdown && (
-              <>
-                <p className="mt-6 mb-3 editorial-eyebrow text-[#7fddd4]">
-                  Equity Strategy
+          <div className="mx-6 mb-8 rounded-[16px] bg-[linear-gradient(180deg,rgba(242,202,80,0.1),rgba(255,255,255,0.02))] p-6 sm:mx-10 sm:p-8">
+            <p className="editorial-eyebrow mb-5 text-[#f2ca50]/90">
+              One-time investment plan (Lumpsum)
+            </p>
+            {hasLumpsum ? (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {BUCKET_KEYS.map((k) => (
+                  <div
+                    key={`lumpsum-${k}`}
+                    className="metric-surface flex items-center justify-between rounded-[12px] px-5 py-4"
+                  >
+                    <span className="text-sm font-medium text-[#cdd7e6]">{BUCKET_LABELS[k]}</span>
+                    <span className="text-right">
+                      <span className="font-display text-lg font-semibold text-white">
+                        {Number(g.lumpsumAllocationPercent?.[k] || 0).toFixed(1)}%
+                      </span>
+                      <span className="ml-3 text-sm font-medium text-[#f2ca50]">
+                        ₹{(g.lumpsumRupeeAllocation?.[k] || 0).toLocaleString('en-IN')}
+                      </span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="rounded-[10px] bg-[rgba(255,255,255,0.035)] px-5 py-4 text-sm text-[#b8c8dc]">
+                Add a lumpsum amount in Basics to unlock the one-time plan with bonds for stability.
+              </p>
+            )}
+          </div>
+
+          {(g.monthlySafeAllocationPercentage != null || g.monthlyGrowthAllocationPercentage != null) && (
+            <div className="mx-6 mb-8 flex flex-wrap gap-8 rounded-[16px] bg-[linear-gradient(180deg,rgba(0,196,180,0.1),rgba(255,255,255,0.02))] px-7 py-5 sm:mx-10">
+              <div className="flex items-center gap-4">
+                <span className="editorial-eyebrow text-[#c8faf5]/70">
+                  SIP safe
+                </span>
+                <span className="font-display text-2xl font-semibold text-[#c8faf5]">
+                  {Number(g.monthlySafeAllocationPercentage ?? 0).toFixed(0)}%
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="editorial-eyebrow text-[#7fddd4]/70">
+                  SIP growth
+                </span>
+                <span className="font-display text-2xl font-semibold text-[#7fddd4]">
+                  {Number(g.monthlyGrowthAllocationPercentage ?? 0).toFixed(0)}%
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="editorial-eyebrow text-[#f2ca50]/70">
+                  Lumpsum safe
+                </span>
+                <span className="font-display text-2xl font-semibold text-[#f2ca50]">
+                  {Number(g.lumpsumSafeAllocationPercentage ?? 0).toFixed(0)}%
+                </span>
+              </div>
+            </div>
+          )}
+
+          {g.instrumentAmountBreakdown && (
+            <div className="mx-6 mb-8 rounded-[16px] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-6 sm:mx-10 sm:p-8">
+              <div className="mb-6 flex items-center justify-between">
+                <p className="editorial-eyebrow">
+                  Recommended instruments
                 </p>
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                  {['compounding', 'growth', 'multibagger'].map((k) => (
-                    <div key={k} className="metric-surface flex items-center justify-between rounded-[10px] px-4 py-3">
-                      <span className="text-sm text-[#cdd7e6]">{k.charAt(0).toUpperCase() + k.slice(1)}</span>
+                {(g.equityBreakdown || g.mutualFundBreakdown) && (
+                  <button
+                    type="button"
+                    onClick={() => setAdvanced((s) => !s)}
+                    className="btn-pill border border-white/10 px-4 py-1.5 text-xs font-bold text-[#d7e0eb] bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.07)]"
+                  >
+                    {advanced ? 'Hide strategy' : 'Show strategy'}
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {['rd', 'debt', 'equity', 'mutualFunds'].map((k) => {
+                  const amt = g.instrumentAmountBreakdown[k];
+                  if (amt == null && g.instrumentBreakdown?.[k] == null) return null;
+                  const val = Number(amt ?? 0);
+                  const pct = g.instrumentBreakdown?.[k];
+                  return (
+                    <div
+                      key={k}
+                      className="metric-surface flex items-center justify-between rounded-[12px] px-5 py-4"
+                    >
+                      <span className="text-sm font-medium text-[#cdd7e6]">{INSTRUMENT_LABELS[k]}</span>
                       <span className="text-right">
-                        <span className="mr-2 text-xs text-[#a8bace]">{Number(g.equityBreakdown[k] || 0).toFixed(0)}%</span>
-                        <span className="font-display font-semibold text-white">
-                          {hasMonthlySip ? `₹${(g.equityBreakdown.monthlyRupee?.[k] || 0).toLocaleString('en-IN')}` : '—'}
-                          {hasLumpsum ? ` / ₹${(g.equityBreakdown.lumpsumRupee?.[k] || 0).toLocaleString('en-IN')}` : ''}
+                        {pct != null && (
+                          <span className="mr-3 text-xs font-semibold text-[#a8bace]">
+                            {Number(pct).toFixed(0)}%
+                          </span>
+                        )}
+                        <span className="font-display text-lg font-semibold text-white">
+                          {hasMonthlySip ? `₹${(val || 0).toLocaleString('en-IN')}` : '—'}
                         </span>
                       </span>
                     </div>
-                  ))}
-                </div>
-              </>
-            )}
+                  );
+                })}
+              </div>
 
-            {advanced && g.mutualFundBreakdown && (
-              <>
-                <p className="mt-6 mb-3 editorial-eyebrow text-[#7fddd4]">
-                  Mutual Fund Strategy
-                </p>
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-4">
-                  {['core', 'flexicap', 'global', 'thematic'].map((k) => (
-                    <div key={k} className="metric-surface flex items-center justify-between rounded-[10px] px-4 py-3">
-                      <span className="text-sm text-[#cdd7e6]">{k.charAt(0).toUpperCase() + k.slice(1)}</span>
-                      <span className="text-right">
-                        <span className="mr-2 text-xs text-[#a8bace]">{Number(g.mutualFundBreakdown[k] || 0).toFixed(0)}%</span>
-                        <span className="font-display font-semibold text-white">
-                          {hasMonthlySip ? `₹${(g.mutualFundBreakdown.monthlyRupee?.[k] || 0).toLocaleString('en-IN')}` : '—'}
-                          {hasLumpsum ? ` / ₹${(g.mutualFundBreakdown.lumpsumRupee?.[k] || 0).toLocaleString('en-IN')}` : ''}
+              {advanced && g.equityBreakdown && (
+                <div className="animate-fade-in">
+                  <p className="mt-8 mb-4 editorial-eyebrow text-[#7fddd4]">
+                    Equity Strategy
+                  </p>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    {['compounding', 'growth', 'multibagger'].map((k) => (
+                      <div key={k} className="metric-surface flex items-center justify-between rounded-[12px] px-5 py-4">
+                        <span className="text-sm font-medium text-[#cdd7e6]">{k.charAt(0).toUpperCase() + k.slice(1)}</span>
+                        <span className="text-right">
+                          <span className="mr-3 text-xs font-semibold text-[#a8bace]">{Number(g.equityBreakdown[k] || 0).toFixed(0)}%</span>
+                          <span className="font-display font-semibold text-white">
+                            {hasMonthlySip ? `₹${(g.equityBreakdown.monthlyRupee?.[k] || 0).toLocaleString('en-IN')}` : '—'}
+                            {hasLumpsum ? ` / ₹${(g.equityBreakdown.lumpsumRupee?.[k] || 0).toLocaleString('en-IN')}` : ''}
+                          </span>
                         </span>
-                      </span>
-                    </div>
-                  ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </>
-            )}
-          </div>
-        )}
+              )}
 
-        <div className="mx-5 mb-6 grid gap-3 rounded-[12px] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))] p-5 sm:mx-8 sm:grid-cols-3">
-          <div>
-            <p className="editorial-eyebrow">Conservative (6%)</p>
-            <p className="font-display text-lg font-semibold text-[#d6dde8]">
-              {hasMonthlySip
-                ? `₹${(g.conservativeValue || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`
-                : '—'}
-            </p>
+              {advanced && g.mutualFundBreakdown && (
+                <div className="animate-fade-in">
+                  <p className="mt-8 mb-4 editorial-eyebrow text-[#7fddd4]">
+                    Mutual Fund Strategy
+                  </p>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
+                    {['core', 'flexicap', 'global', 'thematic'].map((k) => (
+                      <div key={k} className="metric-surface flex items-center justify-between rounded-[12px] px-5 py-4">
+                        <span className="text-sm font-medium text-[#cdd7e6]">{k.charAt(0).toUpperCase() + k.slice(1)}</span>
+                        <span className="text-right">
+                          <span className="mr-3 text-xs font-semibold text-[#a8bace]">{Number(g.mutualFundBreakdown[k] || 0).toFixed(0)}%</span>
+                          <span className="font-display font-semibold text-white">
+                            {hasMonthlySip ? `₹${(g.mutualFundBreakdown.monthlyRupee?.[k] || 0).toLocaleString('en-IN')}` : '—'}
+                            {hasLumpsum ? ` / ₹${(g.mutualFundBreakdown.lumpsumRupee?.[k] || 0).toLocaleString('en-IN')}` : ''}
+                          </span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="mx-6 mb-8 grid gap-4 rounded-[16px] bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-6 sm:mx-10 sm:grid-cols-3 sm:p-8">
+            <div>
+              <p className="editorial-eyebrow mb-1">Conservative (6%)</p>
+              <p className="font-display text-xl font-semibold text-[#d6dde8]">
+                {hasMonthlySip
+                  ? `₹${(g.conservativeValue || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`
+                  : '—'}
+              </p>
+            </div>
+            <div>
+              <p className="editorial-eyebrow text-[#7fddd4] mb-1">Expected</p>
+              <p className="font-display text-xl font-semibold text-[#7fddd4]">
+                {hasMonthlySip
+                  ? `₹${(g.projectedValue || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`
+                  : '—'}
+              </p>
+            </div>
+            <div>
+              <p className="editorial-eyebrow text-[#f2ca50] mb-1">Aggressive (12%)</p>
+              <p className="font-display text-xl font-semibold text-[#f2ca50]">
+                {hasMonthlySip
+                  ? `₹${(g.aggressiveValue || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`
+                  : '—'}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="editorial-eyebrow text-[#7fddd4]">Expected</p>
-            <p className="font-display text-lg font-semibold text-[#7fddd4]">
-              {hasMonthlySip
-                ? `₹${(g.projectedValue || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`
-                : '—'}
-            </p>
-          </div>
-          <div>
-            <p className="editorial-eyebrow text-[#f2ca50]">Aggressive (12%)</p>
-            <p className="font-display text-lg font-semibold text-[#f2ca50]">
-              {hasMonthlySip
-                ? `₹${(g.aggressiveValue || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`
-                : '—'}
-            </p>
+
+          <div className="mx-6 mb-10 sm:mx-10">
+            <SuggestionsPanel suggestions={suggestions} />
           </div>
         </div>
+      )}
 
-        <div className="mx-5 mb-6 sm:mx-8">
-          <SuggestionsPanel suggestions={suggestions} />
-        </div>
-      </div>
 
-      
     </article>
   );
 }

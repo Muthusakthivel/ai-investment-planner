@@ -138,7 +138,8 @@ export default function App() {
   const lumpsumAmount = Number(lumpsumInvestment) || 0;
   const hasMonthlySip = monthlySip > 0;
   const hasLumpsum = lumpsumAmount > 0;
-  const hasAnyInvestment = hasMonthlySip || hasLumpsum;
+  const hasMandatoryInputs = Number(age) > 17 && Number(monthlyIncome) > 0;
+  const hasAnyInvestment = hasMandatoryInputs && (hasMonthlySip || hasLumpsum);
   const snapshotKeys = hasLumpsum ? BUCKET_KEYS : BUCKET_KEYS.filter((k) => k !== 'Bonds');
 
   return (
@@ -201,7 +202,9 @@ export default function App() {
               </div>
               <div className="grid gap-5 sm:grid-cols-2">
                 <label>
-                  <span className="label-modern">Age</span>
+                  <span className="label-modern flex items-center justify-start gap-1">
+                    Age <span className="text-red-500 font-bold">*</span>
+                  </span>
                   <input
                     type="number"
                     min={18}
@@ -209,11 +212,13 @@ export default function App() {
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                     placeholder="Your age"
-                    className="input-modern input-no-spin"
+                    className={`input-modern input-no-spin ${!age ? 'border-red-500/20' : ''}`}
                   />
                 </label>
                 <label>
-                  <span className="label-modern">Monthly income (₹)</span>
+                  <span className="label-modern flex items-center justify-start gap-1">
+                    Monthly salary (₹) <span className="text-red-500 font-bold">*</span>
+                  </span>
                   <input
                     type="text"
                     inputMode="numeric"
@@ -229,7 +234,7 @@ export default function App() {
                     onBlur={() => setMoneyFocus(null)}
                     onChange={(e) => setMonthlyIncome(parseMoneyDigits(e.target.value))}
                     placeholder="e.g. 80,000"
-                    className="input-modern tabular-nums"
+                    className={`input-modern tabular-nums ${!monthlyIncome ? 'border-red-500/20' : ''}`}
                   />
                 </label>
                 <label className="sm:col-span-2">
@@ -478,9 +483,14 @@ export default function App() {
                   ₹{(result.portfolioSummary.totalLumpsumInvestment || 0).toLocaleString('en-IN')}
                 </p>
                 <p className="text-xs text-white/45">One-time lumpsum allocation</p>
-                {!hasAnyInvestment && (
+                {!hasMandatoryInputs && (
+                  <p className="mt-4 rounded-[8px] bg-[rgba(255,100,100,0.15)] px-4 py-3 text-xs font-semibold text-[#ff8e8e] ring-1 ring-red-500/30">
+                    ⚠️ Age (18+) and Monthly Salary are required before the engine can frame your portfolio.
+                  </p>
+                )}
+                {hasMandatoryInputs && !hasAnyInvestment && (
                   <p className="mt-4 rounded-[8px] bg-[rgba(242,202,80,0.12)] px-3 py-2 text-xs text-[#f6e8bb]">
-                    Add SIP and/or lumpsum above to preview allocation and charts.
+                    Enter Monthly SIP or Lumpsum amount above to calculate allocation.
                   </p>
                 )}
               </div>
